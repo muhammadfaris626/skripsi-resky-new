@@ -1,0 +1,3 @@
+@props(['paginator'])
+
+{{ $paginator }}
