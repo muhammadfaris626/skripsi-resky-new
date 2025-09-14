@@ -10,19 +10,11 @@ use Livewire\Component;
 
 class CreateProduct extends Component
 {
-    public $category_id = '';
-    public $product_code = '';
-    public $product_name = '';
-    public $purchase_price = '';
-    public $selling_price = '';
-    public $stock = '';
-    public $action;
+    public $category_id="", $product_code, $product_name, $purchase_price, $selling_price, $stock, $action;
 
     public function generateCode()
     {
-        $prefix = 'PRD';
-        $number = str_pad(Product::count() + 1, 5, '0', STR_PAD_LEFT);
-        $this->product_code = $prefix . '-' . $number;
+
     }
 
     public function setAction($action) {
@@ -32,6 +24,9 @@ class CreateProduct extends Component
 
     public function store()
     {
+        $prefix = 'PRD';
+        $number = str_pad(Product::count() + 1, 5, '0', STR_PAD_LEFT);
+        $this->product_code = $prefix . '-' . $number;
         request()->merge([
             'category_id' => $this->category_id,
             'product_code' => $this->product_code,

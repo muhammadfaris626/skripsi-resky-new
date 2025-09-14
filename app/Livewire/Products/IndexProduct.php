@@ -4,6 +4,7 @@ namespace App\Livewire\Products;
 
 use App\Models\Category;
 use App\Models\Product;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -11,40 +12,48 @@ class IndexProduct extends Component
 {
     use WithPagination;
 
+    // Search and filter properties
     public $search = '';
-    public $categoryFilter = '';
-    public $stockFilter = '';
-    public $priceRangeFilter = '';
-    public $sortBy = 'created_at';
-    public $sortDirection = 'desc';
+    public $filterCategory = '';
+    public $filterStock = '';
+    public $sortField = 'product_name';
+    public $sortDirection = 'asc';
     public $perPage = 10;
 
-    protected $queryString = [
-        'search' => ['except' => ''],
-        'categoryFilter' => ['except' => ''],
-        'stockFilter' => ['except' => ''],
-        'priceRangeFilter' => ['except' => ''],
-        'sortBy' => ['except' => 'created_at'],
-        'sortDirection' => ['except' => 'desc'],
-        'perPage' => ['except' => 10],
+    // Delete properties
+    public $isDeleteModalOpen = false;
+    public $deleteId;
+
+    // Categories for filter dropdown
+    public $categories;
+
+    protected $listeners = [
+        'productCreated' => 'refreshProducts',
+        'productUpdated' => 'refreshProducts',
     ];
 
+    public function mount()
+    {
+        $this->categories = Category::orderBy('name')->get();
+    }
+
+    public function refreshProducts()
+    {
+        $this->resetPage();
+    }
+
+    // Lifecycle hooks for pagination reset
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function updatingCategoryFilter()
+    public function updatingFilterCategory()
     {
         $this->resetPage();
     }
 
-    public function updatingStockFilter()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingPriceRangeFilter()
+    public function updatingFilterStock()
     {
         $this->resetPage();
     }
@@ -54,102 +63,63 @@ class IndexProduct extends Component
         $this->resetPage();
     }
 
+    // Sorting method
     public function sortBy($field)
     {
-        if ($this->sortBy === $field) {
+        if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
         } else {
-            $this->sortBy = $field;
+            $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
-        $this->resetPage();
-    }
-
-    public function resetFilters()
-    {
-        $this->reset([
-            'search',
-            'categoryFilter',
-            'stockFilter',
-            'priceRangeFilter',
-            'sortBy',
-            'sortDirection',
-            'perPage'
-        ]);
-        $this->resetPage();
     }
 
     public function delete($id)
     {
-        $product = Product::find($id);
-        if ($product) {
-            $product->delete();
-            session()->flash('success', 'Produk berhasil dihapus.');
-        }
+        Product::find($id)->delete();
+        LivewireAlert::text('Data deleted successfully.')->success()->toast()->position('top-end')->show();
     }
 
-    public function render()
+    // Get products with filters using model scopes
+    public function getProductsProperty()
     {
         $query = Product::with('category');
 
-        // Search
+        // Search using scope
         if ($this->search) {
-            $query->where(function($q) {
-                $q->where('product_name', 'like', '%' . $this->search . '%')
-                  ->orWhere('product_code', 'like', '%' . $this->search . '%')
-                  ->orWhereHas('category', function($categoryQuery) {
-                      $categoryQuery->where('name', 'like', '%' . $this->search . '%');
-                  });
-            });
+            $query->search($this->search);
         }
 
-        // Filter by category
-        if ($this->categoryFilter) {
-            $query->where('category_id', $this->categoryFilter);
+        // Filter by category using scope
+        if ($this->filterCategory) {
+            $query->byCategory($this->filterCategory);
         }
 
-        // Filter by stock status
-        if ($this->stockFilter) {
-            switch ($this->stockFilter) {
-                case 'in_stock':
-                    $query->inStock();
-                    break;
+        // Filter by stock using scopes
+        if ($this->filterStock !== '') {
+            switch ($this->filterStock) {
                 case 'out_of_stock':
                     $query->outOfStock();
                     break;
                 case 'low_stock':
-                    $query->lowStock(10);
+                    $query->lowStock();
                     break;
-            }
-        }
-
-        // Filter by price range
-        if ($this->priceRangeFilter) {
-            switch ($this->priceRangeFilter) {
-                case 'under_100k':
-                    $query->where('selling_price', '<', 100000);
-                    break;
-                case '100k_500k':
-                    $query->whereBetween('selling_price', [100000, 500000]);
-                    break;
-                case '500k_1m':
-                    $query->whereBetween('selling_price', [500000, 1000000]);
-                    break;
-                case 'above_1m':
-                    $query->where('selling_price', '>', 1000000);
+                case 'in_stock':
+                    $query->inStock();
                     break;
             }
         }
 
         // Sorting
-        $query->orderBy($this->sortBy, $this->sortDirection);
+        $query->orderBy($this->sortField, $this->sortDirection);
 
-        $products = $query->paginate($this->perPage);
-        $categories = Category::orderBy('name')->get();
+        return $query->paginate($this->perPage);
+    }
 
+    public function render()
+    {
         return view('livewire.products.index-product', [
-            'products' => $products,
-            'categories' => $categories
+            'fetch' => $this->products
         ]);
     }
 }
