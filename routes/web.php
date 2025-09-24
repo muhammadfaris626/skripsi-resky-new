@@ -17,6 +17,7 @@ use App\Livewire\Purchases\CreatePurchase;
 use App\Livewire\Purchases\IndexPurchase;
 use App\Livewire\Purchases\ReadPurchase;
 use App\Livewire\Purchases\UpdatePurchase;
+use App\Livewire\Reports\IndexReport;
 use App\Livewire\Sales\CreateSale;
 use App\Livewire\Sales\IndexSale;
 use App\Livewire\Sales\ReadSale;
@@ -80,6 +81,9 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('{id}', [IndexPurchase::class, 'delete'])->name('delete');
     });
     // Reports
+    Route::prefix('reports')->name('reports.')->group(function() {
+        Route::get('/', IndexReport::class)->name('index');
+    });
 
 
     // Route::prefix('')->name('.')->group(function() {

@@ -19,8 +19,7 @@
                     <flux:navlist.item icon="square-3-stack-3d" :href="route('categories.index')" :current="in_array(request()->route()->getName(), ['categories.index', 'categories.create', 'categories.read', 'categories.update'])">Categories</flux:navlist.item>
                     <flux:navlist.item icon="shopping-bag" :href="route('products.index')" :current="in_array(request()->route()->getName(), ['products.index', 'products.create', 'products.read', 'products.update'])">Products</flux:navlist.item>
                     <flux:navlist.item icon="shopping-cart" :href="route('sales.index')" :current="in_array(request()->route()->getName(), ['sales.index', 'sales.create', 'sales.read', 'sales.update'])">Sales</flux:navlist.item>
-                    <flux:navlist.item icon="credit-card" :href="route('purchases.index')" :current="in_array(request()->route()->getName(), ['purchases.index', 'purchases.create', 'purchases.read', 'purchases.update'])">Purchases</flux:navlist.item>
-                    <flux:navlist.item icon="document-text">Reports</flux:navlist.item>
+                    <flux:navlist.item icon="document-text" :href="route('reports.index')" :current="in_array(request()->route()->getName(), ['reports.index'])">Reports</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 

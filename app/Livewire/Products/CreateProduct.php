@@ -12,11 +12,6 @@ class CreateProduct extends Component
 {
     public $category_id="", $product_code, $product_name, $purchase_price, $selling_price, $stock, $action;
 
-    public function generateCode()
-    {
-
-    }
-
     public function setAction($action) {
         $this->action = $action;
         $this->store();
