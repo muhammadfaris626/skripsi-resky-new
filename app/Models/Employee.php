@@ -17,4 +17,8 @@ class Employee extends Model
     public function targets(): HasMany {
         return $this->hasMany(Target::class);
     }
+
+    public function sales(): HasMany {
+        return $this->hasMany(Sale::class);
+    }
 }
