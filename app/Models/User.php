@@ -59,4 +59,17 @@ class User extends Authenticatable
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function($q) use ($search) {
+            $q->where('name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%');
+        });
+    }
+
+    public function scopeByRole($query, $roleName) {
+        return $query->role($roleName);
+    }
+
 }
