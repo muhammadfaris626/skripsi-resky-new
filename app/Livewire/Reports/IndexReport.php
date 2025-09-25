@@ -3,10 +3,12 @@
 namespace App\Livewire\Reports;
 
 use App\Models\Sale;
+use App\Models\Purchase;
 use App\Models\Target;
 use App\Models\Employee;
 use App\Models\Product;
 use App\Models\ItemSale;
+use App\Models\ItemPurchase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -68,17 +70,12 @@ class IndexReport extends Component
 
     public function getTotalProfit()
     {
-        $sales = $this->getSalesReportData();
-        $totalProfit = 0;
-
-        foreach ($sales as $sale) {
-            foreach ($sale->itemSales as $item) {
-                $profit = ($item->price - $item->product->purchase_price) * $item->quantity;
-                $totalProfit += $profit;
-            }
-        }
-
-        return $totalProfit;
+        return ItemSale::join('products', 'item_sales.product_id', '=', 'products.id')
+            ->join('sales', 'item_sales.sale_id', '=', 'sales.id')
+            ->whereBetween('sales.date', [$this->dateFrom, $this->dateTo])
+            ->when($this->selectedEmployee, fn($q) => $q->where('sales.employee_id', $this->selectedEmployee))
+            ->selectRaw('SUM((CAST(item_sales.price AS DECIMAL(15,2)) - CAST(products.purchase_price AS DECIMAL(15,2))) * item_sales.quantity) as total_profit')
+            ->value('total_profit') ?? 0;
     }
 
     public function getTotalTransactions()
@@ -184,6 +181,65 @@ class IndexReport extends Component
         ];
     }
 
+    public function getTotalPurchases()
+    {
+        return Purchase::whereBetween('date', [$this->dateFrom, $this->dateTo])
+            ->when($this->selectedEmployee, fn($q) => $q->where('employee_id', $this->selectedEmployee))
+            ->sum('total_amount');
+    }
+
+    public function getTotalPurchaseTransactions()
+    {
+        return Purchase::whereBetween('date', [$this->dateFrom, $this->dateTo])
+            ->when($this->selectedEmployee, fn($q) => $q->where('employee_id', $this->selectedEmployee))
+            ->count();
+    }
+
+    public function getPurchasesBySupplier()
+    {
+        return Purchase::select('supplier_name', DB::raw('SUM(total_amount) as total_purchases'), DB::raw('COUNT(*) as total_transactions'))
+            ->whereBetween('date', [$this->dateFrom, $this->dateTo])
+            ->when($this->selectedEmployee, fn($q) => $q->where('employee_id', $this->selectedEmployee))
+            ->groupBy('supplier_name')
+            ->orderBy('total_purchases', 'desc')
+            ->get();
+    }
+
+    public function getTopPurchasedProducts()
+    {
+        return ItemPurchase::select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(amount) as total_amount'))
+            ->whereHas('purchase', function($query) {
+                $query->whereBetween('date', [$this->dateFrom, $this->dateTo]);
+                if ($this->selectedEmployee) {
+                    $query->where('employee_id', $this->selectedEmployee);
+                }
+            })
+            ->with('product')
+            ->groupBy('product_id')
+            ->orderBy('total_quantity', 'desc')
+            ->limit(5)
+            ->get();
+    }
+
+    public function getDailyPurchases()
+    {
+        return Purchase::select(DB::raw('DATE(date) as purchase_date'), DB::raw('SUM(total_amount) as daily_total'), DB::raw('COUNT(*) as daily_count'))
+            ->whereBetween('date', [$this->dateFrom, $this->dateTo])
+            ->when($this->selectedEmployee, fn($q) => $q->where('employee_id', $this->selectedEmployee))
+            ->groupBy(DB::raw('DATE(date)'))
+            ->orderBy('purchase_date')
+            ->get();
+    }
+
+    public function getPurchasePaymentMethodStats()
+    {
+        return Purchase::select('payment_method', DB::raw('COUNT(*) as count'), DB::raw('SUM(total_amount) as total'))
+            ->whereBetween('date', [$this->dateFrom, $this->dateTo])
+            ->when($this->selectedEmployee, fn($q) => $q->where('employee_id', $this->selectedEmployee))
+            ->groupBy('payment_method')
+            ->get();
+    }
+
     public function getEmployees()
     {
         return Employee::orderBy('name')->get();
@@ -202,13 +258,19 @@ class IndexReport extends Component
     {
         return view('livewire.reports.index-report', [
             'totalSales' => $this->getTotalSales(),
+            'totalPurchases' => $this->getTotalPurchases(),
             'totalProfit' => $this->getTotalProfit(),
             'totalTransactions' => $this->getTotalTransactions(),
+            'totalPurchaseTransactions' => $this->getTotalPurchaseTransactions(),
             'topProducts' => $this->getTopProducts(),
+            'topPurchasedProducts' => $this->getTopPurchasedProducts(),
             'salesByEmployee' => $this->getSalesByEmployee(),
+            'purchasesBySupplier' => $this->getPurchasesBySupplier(),
             'dailySales' => $this->getDailySales(),
+            'dailyPurchases' => $this->getDailyPurchases(),
             'employeeTargets' => $this->getEmployeeTargets(),
             'paymentMethodStats' => $this->getPaymentMethodStats(),
+            'purchasePaymentMethodStats' => $this->getPurchasePaymentMethodStats(),
             'monthlySalesComparison' => $this->getMonthlySalesComparison(),
             'employees' => $this->getEmployees(),
         ]);

@@ -21,4 +21,8 @@ class Employee extends Model
     public function sales(): HasMany {
         return $this->hasMany(Sale::class);
     }
+
+    public function purchases(): HasMany {
+        return $this->hasMany(Purchase::class);
+    }
 }

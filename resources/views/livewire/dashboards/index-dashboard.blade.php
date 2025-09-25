@@ -4,8 +4,8 @@
             <p class="text-4xl font-bold">Dashboard Monitoring</p>
             <p>CV Angkasa Jaya - Sistem Penjualan</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-8 gap-4">
-            <div class="md:col-span-2 rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+        <div class="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 gap-4">
+            <div class="rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-green-500 opacity-10 rounded-full transform translate-x-8 -translate-y-8"></div>
                 <div class="flex flex-col space-y-1.5 p-6 pb-3">
                     <div class="flex justify-between items-start">
@@ -21,23 +21,23 @@
                     </div>
                 </div>
             </div>
-            <div class="md:col-span-2 rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500 opacity-10 rounded-full transform translate-x-8 -translate-y-8"></div>
+            <div class="rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500 opacity-10 rounded-full transform translate-x-8 -translate-y-8"></div>
                 <div class="flex flex-col space-y-1.5 p-6 pb-3">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-sm font-medium text-slate-500 mb-1">This Year's Sales</p>
-                            <p class="text-2xl font-bold text-slate-900">Rp {{ number_format($thisYearSales ?? 0, 0, ',', '.') }}</p>
+                            <p class="text-sm font-medium text-slate-500 mb-1">This Month's Purchases</p>
+                            <p class="text-2xl font-bold text-slate-900">Rp {{ number_format($thisMonthPurchases ?? 0, 0, ',', '.') }}</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-blue-200 bg-opacity-20">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lucide lucide-shopping-cart w-5 h-5 text-blue-500">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+                        <div class="p-3 rounded-xl bg-indigo-200 bg-opacity-20">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lucide lucide-shopping-bag w-5 h-5 text-indigo-500">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                             </svg>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="md:col-span-2 rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+            <div class="rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500 opacity-10 rounded-full transform translate-x-8 -translate-y-8"></div>
                 <div class="flex flex-col space-y-1.5 p-6 pb-3">
                     <div class="flex justify-between items-start">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="md:col-span-2 rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+            <div class="rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500 opacity-10 rounded-full transform translate-x-8 -translate-y-8"></div>
                 <div class="flex flex-col space-y-1.5 p-6 pb-3">
                     <div class="flex justify-between items-start">
@@ -69,10 +69,13 @@
                     </div>
                 </div>
             </div>
-            <div class="md:col-span-5 rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-4">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-10 gap-4">
+
+            <div class="md:col-span-3 rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-4">
                 <div class="flex justify-start gap-1">
                     <div><flux:icon.shopping-cart class="text-blue-500" /></div>
-                    <div><flux:heading size="lg">Latest Transactions</flux:heading></div>
+                    <div><flux:heading size="lg">Latest Sales</flux:heading></div>
                 </div>
                 <div class="grid grid-cols-1 gap-4">
                     @forelse($latestTransactions as $tx)
@@ -88,7 +91,30 @@
                             </div>
                         </div>
                     @empty
-                        <div class="text-sm text-slate-500">No recent transactions</div>
+                        <div class="text-sm text-slate-500">No recent sales</div>
+                    @endforelse
+                </div>
+            </div>
+            <div class="md:col-span-4 rounded-lg border text-card-foreground relative overflow-hidden bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 p-4 space-y-4">
+                <div class="flex justify-start gap-1">
+                    <div><flux:icon.shopping-bag class="text-indigo-500" /></div>
+                    <div><flux:heading size="lg">Latest Purchases</flux:heading></div>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    @forelse($latestPurchases as $purchase)
+                        <div class="bg-indigo-100 p-2 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm font-bold">{{ $purchase->invoice_number }}</p>
+                                    <p class="text-xs">{{ $purchase->supplier_name }} - {{ \Carbon\Carbon::parse($purchase->date)->format('d M Y') }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-indigo-700">Rp {{ number_format($purchase->total_amount ?? 0, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-sm text-slate-500">No recent purchases</div>
                     @endforelse
                 </div>
             </div>

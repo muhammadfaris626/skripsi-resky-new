@@ -13,19 +13,44 @@
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="in_array(request()->route()->getName(), ['dashboard', 'home'])" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="user-group" :href="route('employees.index')" :current="in_array(request()->route()->getName(), ['employees.index', 'employees.create', 'employees.read', 'employees.update'])">Employees</flux:navlist.item>
-                    <flux:navlist.item icon="rocket-launch" :href="route('targets.index')" :current="in_array(request()->route()->getName(), ['targets.index', 'targets.create', 'targets.read', 'targets.update'])">Targets</flux:navlist.item>
-                    <flux:navlist.item icon="square-3-stack-3d" :href="route('categories.index')" :current="in_array(request()->route()->getName(), ['categories.index', 'categories.create', 'categories.read', 'categories.update'])">Categories</flux:navlist.item>
-                    <flux:navlist.item icon="shopping-bag" :href="route('products.index')" :current="in_array(request()->route()->getName(), ['products.index', 'products.create', 'products.read', 'products.update'])">Products</flux:navlist.item>
-                    <flux:navlist.item icon="shopping-cart" :href="route('sales.index')" :current="in_array(request()->route()->getName(), ['sales.index', 'sales.create', 'sales.read', 'sales.update'])">Sales</flux:navlist.item>
-                    <flux:navlist.item icon="document-text" :href="route('reports.index')" :current="in_array(request()->route()->getName(), ['reports.index'])">Reports</flux:navlist.item>
+                    @can('dashboard: menu')
+                        <flux:navlist.item icon="home" :href="route('dashboard')" :current="in_array(request()->route()->getName(), ['dashboard', 'home'])" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    @endcan
+                    @can('employees: menu')
+                        <flux:navlist.item icon="user-group" :href="route('employees.index')" :current="in_array(request()->route()->getName(), ['employees.index', 'employees.create', 'employees.read', 'employees.update'])">Employees</flux:navlist.item>
+                    @endcan
+                    @can('targets: menu')
+                        <flux:navlist.item icon="rocket-launch" :href="route('targets.index')" :current="in_array(request()->route()->getName(), ['targets.index', 'targets.create', 'targets.read', 'targets.update'])">Targets</flux:navlist.item>
+                    @endcan
+                    @can('categories: menu')
+                        <flux:navlist.item icon="square-3-stack-3d" :href="route('categories.index')" :current="in_array(request()->route()->getName(), ['categories.index', 'categories.create', 'categories.read', 'categories.update'])">Categories</flux:navlist.item>
+                    @endcan
+                    @can('products: menu')
+                        <flux:navlist.item icon="shopping-bag" :href="route('products.index')" :current="in_array(request()->route()->getName(), ['products.index', 'products.create', 'products.read', 'products.update'])">Products</flux:navlist.item>
+                    @endcan
+                    @can('sales: menu')
+                        <flux:navlist.item icon="shopping-cart" :href="route('sales.index')" :current="in_array(request()->route()->getName(), ['sales.index', 'sales.create', 'sales.read', 'sales.update'])">Sales</flux:navlist.item>
+                    @endcan
+                    @can('purchases: menu')
+                        <flux:navlist.item icon="truck" :href="route('purchases.index')" :current="in_array(request()->route()->getName(), ['purchases.index', 'purchases.create', 'purchases.read', 'purchases.update'])">Purchases</flux:navlist.item>
+                    @endcan
+                    @can('reports: menu')
+                        <flux:navlist.item icon="document-text" :href="route('reports.index')" :current="in_array(request()->route()->getName(), ['reports.index'])">Reports</flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
-                <flux:navlist.group :heading="__('Database')" class="grid">
-                    <flux:navlist.item wire:navigate icon="users" :href="route('users.index')" :current="in_array(request()->route()->getName(), ['users.index', 'users.create', 'users.read', 'users.update'])">Users</flux:navlist.item>
-                    <flux:navlist.item wire:navigate icon="key" :href="route('roles.index')" :current="in_array(request()->route()->getName(), ['roles.index', 'roles.create', 'roles.read', 'roles.update'])">Roles</flux:navlist.item>
-                    <flux:navlist.item wire:navigate icon="shield-check" :href="route('permissions.index')" :current="in_array(request()->route()->getName(), ['permissions.index', 'permissions.create', 'permissions.read', 'permissions.update'])">Permissions</flux:navlist.item>
-                </flux:navlist.group>
+                @if(auth()->user()->can('users: menu') || auth()->user()->can('roles: menu') || auth()->user()->can('permissions: menu'))
+                    <flux:navlist.group :heading="__('Database')" class="grid">
+                        @can('users: menu')
+                            <flux:navlist.item wire:navigate icon="users" :href="route('users.index')" :current="in_array(request()->route()->getName(), ['users.index', 'users.create', 'users.read', 'users.update'])">Users</flux:navlist.item>
+                        @endcan
+                        @can('roles: menu')
+                            <flux:navlist.item wire:navigate icon="key" :href="route('roles.index')" :current="in_array(request()->route()->getName(), ['roles.index', 'roles.create', 'roles.read', 'roles.update'])">Roles</flux:navlist.item>
+                        @endcan
+                        @can('permissions: menu')
+                            <flux:navlist.item wire:navigate icon="shield-check" :href="route('permissions.index')" :current="in_array(request()->route()->getName(), ['permissions.index', 'permissions.create', 'permissions.read', 'permissions.update'])">Permissions</flux:navlist.item>
+                        @endcan
+                    </flux:navlist.group>
+                @endif
             </flux:navlist>
 
             <flux:spacer />

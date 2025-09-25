@@ -29,6 +29,16 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function itemSales()
+    {
+        return $this->hasMany(ItemSale::class);
+    }
+
+    public function itemPurchases()
+    {
+        return $this->hasMany(ItemPurchase::class);
+    }
+
     // Accessors
     public function getFormattedPurchasePriceAttribute()
     {
