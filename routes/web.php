@@ -5,6 +5,18 @@ use App\Livewire\Categories\IndexCategory;
 use App\Livewire\Categories\ReadCategory;
 use App\Livewire\Categories\UpdateCategory;
 use App\Livewire\Dashboards\IndexDashboard;
+use App\Livewire\Databases\Permissions\CreatePermission;
+use App\Livewire\Databases\Permissions\IndexPermission;
+use App\Livewire\Databases\Permissions\ReadPermission;
+use App\Livewire\Databases\Permissions\UpdatePermission;
+use App\Livewire\Databases\Roles\CreateRole;
+use App\Livewire\Databases\Roles\IndexRole;
+use App\Livewire\Databases\Roles\ReadRole;
+use App\Livewire\Databases\Roles\UpdateRole;
+use App\Livewire\Databases\Users\CreateUser;
+use App\Livewire\Databases\Users\IndexUser;
+use App\Livewire\Databases\Users\ReadUser;
+use App\Livewire\Databases\Users\UpdateUser;
 use App\Livewire\Employees\CreateEmployee;
 use App\Livewire\Employees\IndexEmployee;
 use App\Livewire\Employees\ReadEmployee;
@@ -84,6 +96,32 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('reports')->name('reports.')->group(function() {
         Route::get('/', IndexReport::class)->name('index');
     });
+
+    Route::prefix('databases')->group(function() {
+        Route::prefix('users')->name('users.')->group(function() {
+            Route::get('/', IndexUser::class)->name('index');
+            Route::get('create', CreateUser::class)->name('create');
+            Route::get('read/{id}', ReadUser::class)->name('read');
+            Route::get('update/{id}', UpdateUser::class)->name('update');
+            Route::delete('{id}', [IndexUser::class, 'delete'])->name('delete');
+        });
+        Route::prefix('roles')->name('roles.')->group(function() {
+            Route::get('/', IndexRole::class)->name('index');
+            Route::get('create', CreateRole::class)->name('create');
+            Route::get('read/{id}', ReadRole::class)->name('read');
+            Route::get('update/{id}', UpdateRole::class)->name('update');
+            Route::delete('{id}', [IndexRole::class, 'delete'])->name('delete');
+        });
+        Route::prefix('permissions')->name('permissions.')->group(function() {
+            Route::get('/', IndexPermission::class)->name('index');
+            Route::get('create', CreatePermission::class)->name('create');
+            Route::get('read/{id}', ReadPermission::class)->name('read');
+            Route::get('update/{id}', UpdatePermission::class)->name('update');
+            Route::delete('{id}', [IndexPermission::class, 'delete'])->name('delete');
+        });
+    });
+
+
 
 
     // Route::prefix('')->name('.')->group(function() {

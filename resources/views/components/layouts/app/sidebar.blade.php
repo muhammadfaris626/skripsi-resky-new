@@ -21,6 +21,11 @@
                     <flux:navlist.item icon="shopping-cart" :href="route('sales.index')" :current="in_array(request()->route()->getName(), ['sales.index', 'sales.create', 'sales.read', 'sales.update'])">Sales</flux:navlist.item>
                     <flux:navlist.item icon="document-text" :href="route('reports.index')" :current="in_array(request()->route()->getName(), ['reports.index'])">Reports</flux:navlist.item>
                 </flux:navlist.group>
+                <flux:navlist.group :heading="__('Database')" class="grid">
+                    <flux:navlist.item wire:navigate icon="users" :href="route('users.index')" :current="in_array(request()->route()->getName(), ['users.index', 'users.create', 'users.read', 'users.update'])">Users</flux:navlist.item>
+                    <flux:navlist.item wire:navigate icon="key" :href="route('roles.index')" :current="in_array(request()->route()->getName(), ['roles.index', 'roles.create', 'roles.read', 'roles.update'])">Roles</flux:navlist.item>
+                    <flux:navlist.item wire:navigate icon="shield-check" :href="route('permissions.index')" :current="in_array(request()->route()->getName(), ['permissions.index', 'permissions.create', 'permissions.read', 'permissions.update'])">Permissions</flux:navlist.item>
+                </flux:navlist.group>
             </flux:navlist>
 
             <flux:spacer />
